@@ -25,7 +25,7 @@ def get_key():
       pass
 
 def display_box(screen, message, x, y):
-  "Print a message in a box in the middle of the screen"
+  "Print a message in a box in the screen"
   fontobject = pygame.font.Font(None,18)
   pygame.draw.rect(screen, (255,255,255),(x,y,40,20), 0)
   pygame.draw.rect(screen, (255,255,255),(x,y,40,20), 1)
@@ -73,6 +73,7 @@ def metodo2(screen):
     return dato
 
 def instr(screen):
+    #instrucciones
     myfont = pygame.font.SysFont("Arial Black", 16)
     label = myfont.render("Instructions: first, select the desired movement with the arrows of the ", 1, (255,255,255))
     screen.blit(label, (10, 10))
@@ -84,6 +85,7 @@ def instr(screen):
     pygame.display.flip()
 
 def flecha(screen, flechas, fondo, rover):
+    #Mostrar la flecha presionada
     screen.blit(fondo, (0,0))
     screen.blit(rover, (350,80))   
     screen.blit(flechas, (60,80))
@@ -103,36 +105,54 @@ def main():
       inkey = get_key()
       if inkey == K_1:
         delay = 1
-        fondo = pygame.image.load("fondoLuna.png").convert_alpha()
+        fondo = pygame.image.load("fondoLuna.png").convert()
+        hacer = True
         break
       elif inkey == K_2:
         delay = 294
-        fondo = pygame.image.load("fondoMercurio.png").convert_alpha()
+        fondo = pygame.image.load("fondoMercurio.png").convert()
+        hacer = True
         break
       elif inkey == K_3:
         delay = 127
-        fondo = pygame.image.load("fondoVenus.png").convert_alpha()
+        fondo = pygame.image.load("fondoVenus.png").convert()
+        hacer = True
         break
       elif inkey == K_4:
         delay = 270
-        fondo = pygame.image.load("fondoMarte.png").convert_alpha()
+        fondo = pygame.image.load("fondoMarte.png").convert()
+        hacer = True
         break
-      
+
+      elif inkey == K_5:
+        fondo = pygame.image.load("fondo.png").convert()
+        envio = "A" #que camine solo
+        hacer = False
+        print envio
+        #uuu.envia_udp(envio)
+        break
+
     flechas1 = pygame.image.load("flechas1.png").convert_alpha()
     rover = pygame.image.load("rover.png").convert_alpha()
+    screen.blit(fondo, (0,0))
 
-    screen.blit(fondo, (0,0))  
-    screen.blit(flechas1, (60,80))
-    screen.blit(rover, (350,80))
-    pygame.display.flip()
-
-    instr(screen)    
+    if hacer == True:
+      screen.blit(flechas1, (60,80))
+      screen.blit(rover, (350,80))
+      instr(screen)
+      
+    pygame.display.flip()  
     
     while True:
         tecla=pygame.key.get_pressed()
-
         if tecla[K_ESCAPE]:
               while True:
+                if hacer == False:
+                  envio = "B"
+                  print envio
+                  #uuu.envia_udp(envio)
+                  
+                hacer = True
                 tecla=pygame.key.get_pressed()
                 inicio = pygame.image.load("inicio.png").convert()
                 screen.blit(inicio, (0,0))
@@ -141,27 +161,44 @@ def main():
                 if inkey == K_1:
                   delay = 1
                   fondo = pygame.image.load("fondoLuna.png").convert()
+                  hacer = True
                   break
                 elif inkey == K_2:
                   delay = 294
                   fondo = pygame.image.load("fondoMercurio.png").convert()
+                  hacer = True
                   break
                 elif inkey == K_3:
                   delay = 127
                   fondo = pygame.image.load("fondoVenus.png").convert()
+                  hacer = True
                   break
                 elif inkey == K_4:
                   delay = 270
                   fondo = pygame.image.load("fondoMarte.png").convert()
+                  hacer = True
                   break
-              screen.blit(fondo, (0,0))  
-              screen.blit(flechas1, (60,80))
-              screen.blit(rover, (350,80))
-              pygame.display.flip()
 
-              instr(screen) 
+                elif inkey == K_5:
+                  fondo = pygame.image.load("fondo.png").convert()
+                  envio = "A" #que camine solo
+                  hacer = False
+                  print envio
+                  #uuu.envia_udp(envio)
+                  break
+                
+              flechas1 = pygame.image.load("flechas1.png").convert_alpha()
+              rover = pygame.image.load("rover.png").convert_alpha()
+              screen.blit(fondo, (0,0))
+
+              if hacer == True:
+                screen.blit(flechas1, (60,80))
+                screen.blit(rover, (350,80))
+                instr(screen)
+                
+              pygame.display.flip() 
         
-        elif tecla[K_LEFT]:
+        elif tecla[K_LEFT] and hacer == True:
             flechas = pygame.image.load("flechas2.png").convert_alpha()   
             flecha(screen, flechas, fondo, rover) 
             dato = metodo2(screen)
@@ -174,7 +211,7 @@ def main():
             print envio
             #uuu.envia_udp(envio)
 
-        elif tecla[K_RIGHT]:
+        elif tecla[K_RIGHT] and hacer == True:
             flechas = pygame.image.load("flechas3.png").convert_alpha()   
             flecha(screen, flechas, fondo, rover)
             dato = metodo2(screen)
@@ -187,7 +224,7 @@ def main():
             print envio
             #uuu.envia_udp(envio)
 
-        elif tecla[K_DOWN]:
+        elif tecla[K_DOWN] and hacer == True:
             flechas = pygame.image.load("flechas5.png").convert_alpha()
             flecha(screen, flechas, fondo, rover) 
             dato = metodo1(screen)
@@ -200,7 +237,7 @@ def main():
             print envio
             #uuu.envia_udp(envio)
                                 
-        elif tecla[K_UP]:    
+        elif tecla[K_UP] and hacer == True:    
             flechas = pygame.image.load("flechas4.png").convert_alpha()
             flecha(screen, flechas, fondo, rover)             
             dato = metodo1(screen)
